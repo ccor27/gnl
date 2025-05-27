@@ -1,8 +1,12 @@
 #include "get_next_line.h"
 
-char *ft_store_and_free()
+char *ft_store_and_free(char *content, char *buffer)
 {
+    char *temp;
 
+    temp = ft_strjoin(content,buffer);
+    free(content);
+    return (temp);
 }
 char *ft_get_content(int fd)
 {
@@ -15,6 +19,7 @@ char *ft_get_content(int fd)
     char *content;
     size_t bytes_read;
 
+    content = NULL;
     buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
     if(!buffer)
         return (NULL);
@@ -25,14 +30,17 @@ char *ft_get_content(int fd)
         if( bytes_read == -1)
         {
             free(buffer);
+            free(content);
             return (NULL);
         }
         buffer[bytes_read]='\0';
-        content = ft_store_and_free();
+        content = ft_store_and_free(content, buffer);
+        if(!content)//liberar buffer??
+            return (NULL);
         if(ft_strchr(content,"\n"))
             break;
     }
-    return (buffer);
+    return (content);
 }
 
 char *ft_get_line(char *buffer)
