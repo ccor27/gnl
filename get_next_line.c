@@ -27,6 +27,8 @@ char	*ft_get_line(t_list **list)
 	char	*line;
 
 	line_size = ft_know_line_size(*list);
+	if (line_size == 0)
+		return (NULL);
 	line = malloc((line_size + 1) * sizeof(char));
 	if (!line)
 		return (NULL);
@@ -63,15 +65,15 @@ void	read_file(t_list **list, int fd)
 		if (!buffer)
 			return ;
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (!bytes_read)
+		if (!bytes_read || bytes_read <= 0)
 		{
 			free(buffer);
 			return ;
 		}
 		buffer[bytes_read] = '\0';
 		append_node(list, buffer);
-		free(buffer);
 	}
+	free(buffer);
 }
 
 char	*get_next_line(int fd)
@@ -82,7 +84,13 @@ char	*get_next_line(int fd)
 	if (fd < 0 || read(fd, 0, 0) < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	read_file(&list, fd);
+	if (!list)
+		return (NULL);
 	line = ft_get_line(&list);
+	if (!line || line[0] == '\0') {
+		free(line);
+		return (NULL);
+	}
 	ft_prepare_list_next_call(&list);
-	return(line);
+	return (line);
 }
