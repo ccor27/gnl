@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: crosorio <crosorio@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/28 15:50:25 by crosorio          #+#    #+#             */
+/*   Updated: 2025/05/28 15:56:44 by crosorio         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 size_t	ft_strlen(const char *s)
@@ -9,29 +21,25 @@ size_t	ft_strlen(const char *s)
 		lenght++;
 	return (lenght);
 }
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	size_t	s_lenght;
-	size_t	i;
-	char	*sub;
+	unsigned char		*d;
+	unsigned const char	*s;
+	size_t				i;
 
-	s_lenght = ft_strlen(s);
-	i = 0;
-	if (start >= s_lenght)
-		return (ft_strdup(""));
-	if (len > s_lenght - start)
-		len = s_lenght - start;
-	sub = malloc((len + 1) * sizeof(char));
-	if (!sub)
+	if (n == 0)
+		return (dest);
+	if (dest == NULL && src == NULL)
 		return (NULL);
-	while (s[start] && i < len)
+	d = (unsigned char *)dest;
+	s = (const unsigned char *)src;
+	i = 0;
+	while (i < n)
 	{
-		sub[i] = s[start];
-		start++;
+		d[i] = s[i];
 		i++;
 	}
-	sub[i] = '\0';
-	return (sub);
+	return (dest);
 }
 
 char	*ft_strchr(const char *s, int c)
