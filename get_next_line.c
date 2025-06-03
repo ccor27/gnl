@@ -1,96 +1,127 @@
 #include "get_next_line.h"
 
-void	ft_prepare_list_next_call(t_list **list)
+char	*ft_prepare_next_call(t_list **list)
 {
-	t_list	*temp;
+	int		i;
+	t_list	*head;
+	t_list *aux;
+	char *line;
 
-	if (!list)
-		return ;
-	while (*list)
+	head = *list;
+	line = 0;
+	i = 0;
+	while (head)
 	{
-		if (there_is_newline(*list))
-			break ;
+		if(!there_is_newline(head->content))
+		{
+			line = ft_strjoin(line, head->content,0,0);
+			aux = head->next;
+			free(head->content);
+			free(head);
+			head = aux;
+		}
 		else
 		{
-			temp = (*list)->next;
-			free((*list)->content);
-			free(*list);
-			*list = temp;
+			
 		}
 	}
-	ft_trim_after_newline(*list);
+
+	return(line);
 }
-
-char	*ft_get_line(t_list **list)
-{
-	int		line_size;
-	char	*line;
-
-	line_size = ft_know_line_size(*list);
-	if (line_size == 0)
-		return (NULL);
-	line = malloc((line_size + 1) * sizeof(char));
-	if (!line)
-		return (NULL);
-	ft_fill_up_line(*list, line, line_size);
-	return (line);
-}
-
-void	append_node(t_list **list, char *string)
+int	append_node(t_list **list, char *string)
 {
 	t_list	*current;
 	t_list	*new_node;
 
-	new_node = ft_lstnew(string);
+	new_node = malloc(sizeof(t_list));
 	if (!new_node)
-		return ;
+		return (0);
+	new_node->content = ft_strdup(string);
+	if (!new_node->content)
+		return (0);
+	new_node->next = NULL;
 	if (!*list)
 	{
 		*list = new_node;
-		return ;
+		return (1);
 	}
 	current = *list;
 	while (current->next)
 		current = current->next;
 	current->next = new_node;
+	return (1);
 }
-void	read_file(t_list **list, int fd)
+int	ft_read(int fd, t_list **list, char *buffer)
 {
-	int		bytes_read;
-	char	*buffer;
+	int	bytes_read;
+	int	flag;
 
-	while (!there_is_newline(*list))
+	flag = 1;
+	while (flag)
 	{
-		buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
-		if (!buffer)
-			return ;
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
-		if (!bytes_read || bytes_read <= 0)
-		{
-			free(buffer);
-			return ;
-		}
+		if (bytes_read == 0)
+			break ;
+		else if (bytes_read == -1)
+			return (0);
 		buffer[bytes_read] = '\0';
-		append_node(list, buffer);
+		if (!append_node(list, buffer))
+			return (0);
+		if (there_is_newline(buffer))
+			flag = 0;
 	}
 	free(buffer);
+	return (1);
 }
-
 char	*get_next_line(int fd)
 {
 	static t_list	*list = NULL;
 	char			*line;
+	char			*buffer;
 
-	if (fd < 0 || read(fd, 0, 0) < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || read(fd, 0, 0) < 0)
 		return (NULL);
-	read_file(&list, fd);
-	if (!list)
+	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!buffer)
 		return (NULL);
-	line = ft_get_line(&list);
-	if (!line || line[0] == '\0') {
-		free(line);
-		return (NULL);
+	if (!ft_read(fd, &list, buffer))
+	{
+		free(buffer);
+		return (ft_free_list(&list));
 	}
-	ft_prepare_list_next_call(&list);
-	return (line);
+}
+// read
+// get line
+// prepare to next call
+// return
+/**
+ * get the line
+ */
+
+char	*ft_strjoin(char const *s1, char const *s2, size_t len1, size_t len2)
+{
+	size_t	i;
+	size_t	j;
+	char	*new_str;
+
+	j = 0;
+	i = 0;
+	if (!s1 && !s2)
+		return (ft_strdup(""));
+	if (s1)
+		len1 = ft_strlen(s1);
+	if (s2)
+		len2 = ft_strlen(s2);
+	new_str = malloc(len1 + len2 + 1);
+	if (!new_str)
+		return (NULL);
+	while (i < len1)
+	{
+		new_str[i] = s1[i];
+		i++;
+	}
+	while (j < len2)
+		new_str[i++] = s2[j++];
+	new_str[i] = '\0';
+	return (new_str);
 }
