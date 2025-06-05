@@ -1,6 +1,6 @@
 #include "get_next_line.h"
 
-t_list	ft_free(t_list **lst)
+void	ft_free(t_list **lst)
 {
 	t_list	*aux;
 
@@ -15,6 +15,7 @@ t_list	ft_free(t_list **lst)
 		}
 	}
 }
+
 int	there_is_newline(char *string)
 {
 	int	i;
@@ -33,36 +34,27 @@ int	there_is_newline(char *string)
 
 char	*ft_strdup(const char *s)
 {
-	char	*s_copy;
-	size_t	s_size;
+	char		*s_copy;
+	size_t		s_size;
+	size_t		i;
+	const char	*src;
 
 	s_size = ft_strlen(s);
 	s_copy = malloc((s_size + 1) * sizeof(char));
 	if (!s_copy)
 		return (NULL);
-	ft_memcpy(s_copy, s, s_size + 1);
-	return (s_copy);
-}
-void	*ft_memcpy(void *dest, const void *src, size_t n)
-{
-	unsigned char		*d;
-	unsigned const char	*s;
-	size_t				i;
-
-	if (n == 0)
-		return (dest);
-	if (dest == NULL && src == NULL)
+	if (!s && !s_copy)
 		return (NULL);
-	d = (unsigned char *)dest;
-	s = (const unsigned char *)src;
+	src = s;
 	i = 0;
-	while (i < n)
+	while (i < s_size + 1)
 	{
-		d[i] = s[i];
+		s_copy[i] = src[i];
 		i++;
 	}
-	return (dest);
+	return (s_copy);
 }
+
 size_t	ft_strlen(const char *s)
 {
 	size_t	lenght;
@@ -71,4 +63,33 @@ size_t	ft_strlen(const char *s)
 	while (s[lenght])
 		lenght++;
 	return (lenght);
+}
+
+char	*ft_trim_string(char **string, int i, int j, int aux)
+{
+	char	*trimmed;
+	char	*clean_content;
+
+	if (!string)
+		return (NULL);
+	while (*string[i] && *string[i] != '\n')
+		i++;
+	if (*string[i] == '\n')
+		i++;
+	aux = i;
+	trimmed = malloc((i + 1) * sizeof(char));
+	if (!trimmed)
+		return (NULL);
+	trimmed[i] = '\0';
+	while (--i >= 0)
+		trimmed[i] = *string[i];
+	while (*string[aux])
+		*string[j++] = *string[aux++];
+	*string[j] = '\0';
+	clean_content = ft_strdup(*string);
+	if (!clean_content)
+		return (NULL);
+	free(*string);
+	*string = clean_content;
+	return (trimmed);
 }

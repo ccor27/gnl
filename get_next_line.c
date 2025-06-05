@@ -2,32 +2,32 @@
 
 char	*ft_prepare_next_call(t_list **list)
 {
-	int		i;
 	t_list	*head;
-	t_list *aux;
-	char *line;
+	t_list	*aux;
+	char	*line;
+	char	*trimmed;
 
 	head = *list;
-	line = 0;
-	i = 0;
+	line = NULL;
 	while (head)
 	{
-		if(!there_is_newline(head->content))
+		if (there_is_newline(head->content))
 		{
-			line = ft_strjoin(line, head->content,0,0);
-			aux = head->next;
-			free(head->content);
-			free(head);
-			head = aux;
+			trimmed = ft_trim_string(&head->content, 0, 0, 0);
+			if (!trimmed)
+				return (free(line), NULL);
+			line = ft_strjoin(line, trimmed, 0, 0);
+			break ;
 		}
-		else
-		{
-			
-		}
+		line = ft_strjoin(line, head->content, 0, 0);
+		aux = head->next;
+		free(head->content);
+		free(head);
+		head = aux;
 	}
-
-	return(line);
+	return (line);
 }
+
 int	append_node(t_list **list, char *string)
 {
 	t_list	*current;
@@ -51,6 +51,7 @@ int	append_node(t_list **list, char *string)
 	current->next = new_node;
 	return (1);
 }
+
 int	ft_read(int fd, t_list **list, char *buffer)
 {
 	int	bytes_read;
@@ -73,30 +74,6 @@ int	ft_read(int fd, t_list **list, char *buffer)
 	free(buffer);
 	return (1);
 }
-char	*get_next_line(int fd)
-{
-	static t_list	*list = NULL;
-	char			*line;
-	char			*buffer;
-
-	if (fd < 0 || read(fd, 0, 0) < 0)
-		return (NULL);
-	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (!buffer)
-		return (NULL);
-	if (!ft_read(fd, &list, buffer))
-	{
-		free(buffer);
-		return (ft_free_list(&list));
-	}
-}
-// read
-// get line
-// prepare to next call
-// return
-/**
- * get the line
- */
 
 char	*ft_strjoin(char const *s1, char const *s2, size_t len1, size_t len2)
 {
@@ -124,4 +101,31 @@ char	*ft_strjoin(char const *s1, char const *s2, size_t len1, size_t len2)
 		new_str[i++] = s2[j++];
 	new_str[i] = '\0';
 	return (new_str);
+}
+
+char	*get_next_line(int fd)
+{
+	static t_list	*list = NULL;
+	char			*line;
+	char			*buffer;
+
+	if (fd < 0 || read(fd, 0, 0) < 0)
+		return (NULL);
+	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!buffer)
+		return (NULL);
+	if (!ft_read(fd, &list, buffer))
+	{
+		free(buffer);
+		ft_free(&list);
+		return (NULL);
+	}
+	line = ft_prepare_next_call(&list);
+	if (!line)
+	{
+		free(line);
+		ft_free(&list);
+		return (NULL);
+	}
+	return (line);
 }
