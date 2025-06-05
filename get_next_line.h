@@ -20,7 +20,7 @@ char				*ft_strdup(const char *s);
 size_t				ft_strlen(const char *s);
 char				*ft_trim_string(char **string, int i, int j, int aux);
 // get_next_line.c
-char				*ft_prepare_next_call(t_list **list);
+char	*ft_prepare_next_call(t_list **list, char *trimmed, char *tmp);
 int					append_node(t_list **list, char *string);
 int					ft_read(int fd, t_list **list, char *buffer);
 char				*get_next_line(int fd);

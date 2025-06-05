@@ -1,29 +1,31 @@
 #include "get_next_line.h"
 
-char	*ft_prepare_next_call(t_list **list)
+char	*ft_prepare_next_call(t_list **list, char *trimmed, char *tmp)
 {
-	t_list	*head;
 	t_list	*aux;
 	char	*line;
-	char	*trimmed;
 
-	head = *list;
 	line = NULL;
-	while (head)
+	while (*list && (*list)->content)
 	{
-		if (there_is_newline(head->content))
+		if (there_is_newline((*list)->content))
 		{
-			trimmed = ft_trim_string(&head->content, 0, 0, 0);
+			trimmed = ft_trim_string(&(*list)->content, 0, 0, 0);
 			if (!trimmed)
 				return (free(line), NULL);
-			line = ft_strjoin(line, trimmed, 0, 0);
-			break ;
+			tmp = ft_strjoin(line, trimmed, 0, 0);
+			free(trimmed);
+			free(line);
+			line = tmp;
+			break;
 		}
-		line = ft_strjoin(line, head->content, 0, 0);
-		aux = head->next;
-		free(head->content);
-		free(head);
-		head = aux;
+		tmp = ft_strjoin(line, (*list)->content, 0, 0);
+		free(line);
+		line = tmp;
+		aux = (*list)->next;
+		free((*list)->content);
+		free(*list);
+		*list = aux;
 	}
 	return (line);
 }
@@ -38,7 +40,10 @@ int	append_node(t_list **list, char *string)
 		return (0);
 	new_node->content = ft_strdup(string);
 	if (!new_node->content)
+	{
+		free(new_node);
 		return (0);
+	}
 	new_node->next = NULL;
 	if (!*list)
 	{
@@ -105,10 +110,11 @@ char	*ft_strjoin(char const *s1, char const *s2, size_t len1, size_t len2)
 
 char	*get_next_line(int fd)
 {
-	static t_list	*list = NULL;
+	static t_list	*list;
 	char			*line;
 	char			*buffer;
 
+	list = NULL;
 	if (fd < 0 || read(fd, 0, 0) < 0)
 		return (NULL);
 	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
@@ -120,7 +126,7 @@ char	*get_next_line(int fd)
 		ft_free(&list);
 		return (NULL);
 	}
-	line = ft_prepare_next_call(&list);
+	line = ft_prepare_next_call(&list,NULL,NULL);
 	if (!line)
 	{
 		free(line);
