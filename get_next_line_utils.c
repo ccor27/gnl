@@ -1,74 +1,24 @@
 #include "get_next_line.h"
 
-void	ft_free(t_list **lst)
+char	*ft_strdup(const char *s)
 {
-	t_list	*aux;
+	char	*s_copy;
+	size_t	s_size;
+	size_t	i;
 
-	if (*lst)
-	{
-		while (*lst)
-		{
-			aux = (*lst)->next;
-			free((*lst)->content);
-			free(*lst);
-			*lst = aux;
-		}
-		free(aux);
-	}
-}
-
-int	there_is_newline(char *string)
-{
-	int	i;
-
-	if (!string)
-		return (0);
+	if (!s)
+		return (NULL);
+	s_size = ft_strlen(s);
+	s_copy = malloc(s_size + 1);
+	if (!s_copy)
+		return (NULL);
 	i = 0;
-	while (string[i])
+	while (i <= s_size)
 	{
-		if (string[i] == '\n')
-			return (1);
+		s_copy[i] = s[i];
 		i++;
 	}
-	return (0);
-}
-
-// char	*ft_strdup(const char *s)
-// {
-// 	size_t	len;
-// 	char	*copy;
-
-// 	if (!s)
-// 		return (NULL);
-// 	len = ft_strlen(s);
-// 	copy = malloc(len + 1);
-// 	if (!copy)
-// 		return (NULL);
-// 	for (size_t i = 0; i < len; i++)
-// 		copy[i] = s[i];
-// 	copy[len] = '\0';
-// 	return (copy);
-// }
-
-char *ft_strdup(const char *s)
-{
-    char *s_copy;
-    size_t s_size;
-    size_t i;
-
-    if (!s)
-        return (NULL);
-    s_size = ft_strlen(s);
-    s_copy = malloc(s_size + 1);
-    if (!s_copy)
-        return (NULL);
-    i = 0;
-    while (i <= s_size)
-    {
-        s_copy[i] = s[i];
-        i++;
-    }
-    return (s_copy);
+	return (s_copy);
 }
 
 size_t	ft_strlen(const char *s)
@@ -81,32 +31,73 @@ size_t	ft_strlen(const char *s)
 	return (lenght);
 }
 
-char	*ft_trim_string(char **string, int i, int j, int aux)
+char	*ft_strchr(const char *s, int c)
 {
-	char	*trimmed;
-	char	*clean_content;
+	int	i;
+	int	s_lenght;
 
-	if (!string || !*string || **string == '\0')
-		return (NULL);
-	while ((*string)[i] && (*string)[i] != '\n')
+	i = 0;
+	s_lenght = ft_strlen(s);
+	while (i < s_lenght)
+	{
+		if (s[i] == (unsigned char)c)
+			return ((char *)&s[i]);
 		i++;
-	if ((*string)[i] == '\n')
+	}
+	if ((unsigned char)c == '\0')
+		return ((char *)&s[i]);
+	return (0);
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	size_t	s_lenght;
+	size_t	i;
+	char	*sub;
+
+	s_lenght = ft_strlen(s);
+	i = 0;
+	if (start >= s_lenght)
+		return (ft_strdup(""));
+	if (len > s_lenght - start)
+		len = s_lenght - start;
+	sub = malloc((len + 1) * sizeof(char));
+	if (!sub)
+		return (NULL);
+	while (s[start] && i < len)
+	{
+		sub[i] = s[start];
+		start++;
 		i++;
-	aux = i;
-	trimmed = malloc((i + 1) * sizeof(char));
-	if (!trimmed)
+	}
+	sub[i] = '\0';
+	return (sub);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2, size_t i, size_t j)
+{
+	size_t	len1;
+	size_t	len2;
+	char	*new_str;
+
+	len1 = 0;
+	len2 = 0;
+	i = 0;
+	if (s1)
+		len1 = ft_strlen(s1);
+	if (s2)
+		len2 = ft_strlen(s2);
+	new_str = malloc(len1 + len2 + 1);
+	if (!new_str)
 		return (NULL);
-	trimmed[i] = '\0';
-	while (--i >= 0)
-		trimmed[i] = (*string)[i];
-	while ((*string)[aux])
-		(*string)[j++] = (*string)[aux++];
-	(*string)[j] = '\0';
-	clean_content = ft_strdup(*string);
-	if (!clean_content)
-		return (NULL);
-	free(*string);
-	*string = clean_content;
-	free(clean_content);
-	return (trimmed);
+	while (i < len1)
+	{
+		new_str[i] = s1[i];
+		i++;
+	}
+	j = 0;
+	while (j < len2)
+		new_str[i++] = s2[j++];
+	new_str[i] = '\0';
+	return (new_str);
 }
