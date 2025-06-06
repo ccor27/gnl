@@ -17,7 +17,13 @@ char	*ft_prepare_next_call(t_list **list, char *trimmed, char *tmp)
 			free(trimmed);
 			free(line);
 			line = tmp;
-			break;
+			if (*(*list)->content == '\0')
+			{
+				free((*list)->content);
+				free(*list);
+				*list = NULL;
+			}
+			break ;
 		}
 		tmp = ft_strjoin(line, (*list)->content, 0, 0);
 		free(line);
@@ -41,6 +47,7 @@ int	append_node(t_list **list, char *string)
 	new_node->content = ft_strdup(string);
 	if (!new_node->content)
 	{
+		free(new_node->content);
 		free(new_node);
 		return (0);
 	}
@@ -54,29 +61,32 @@ int	append_node(t_list **list, char *string)
 	while (current->next)
 		current = current->next;
 	current->next = new_node;
+	*list = current;
+	ft_free(&current);
 	return (1);
 }
 
 int	ft_read(int fd, t_list **list, char *buffer)
 {
 	int	bytes_read;
-	int	flag;
 
-	flag = 1;
-	while (flag)
+
+	while (1)
 	{
 		bytes_read = read(fd, buffer, BUFFER_SIZE);
 		if (bytes_read == 0)
+		{
+			free(buffer);
 			break ;
+		}
 		else if (bytes_read == -1)
 			return (0);
 		buffer[bytes_read] = '\0';
 		if (!append_node(list, buffer))
 			return (0);
 		if (there_is_newline(buffer))
-			flag = 0;
+			break;
 	}
-	free(buffer);
 	return (1);
 }
 
@@ -115,7 +125,7 @@ char	*get_next_line(int fd)
 	char			*buffer;
 
 	list = NULL;
-	if (fd < 0 || read(fd, 0, 0) < 0)
+	if (fd < 0 || read(fd, 0, 0) < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
@@ -126,7 +136,7 @@ char	*get_next_line(int fd)
 		ft_free(&list);
 		return (NULL);
 	}
-	line = ft_prepare_next_call(&list,NULL,NULL);
+	line = ft_prepare_next_call(&list, NULL, NULL);
 	if (!line)
 	{
 		free(line);

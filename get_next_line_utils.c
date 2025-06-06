@@ -13,6 +13,7 @@ void	ft_free(t_list **lst)
 			free(*lst);
 			*lst = aux;
 		}
+		free(aux);
 	}
 }
 
@@ -31,6 +32,23 @@ int	there_is_newline(char *string)
 	}
 	return (0);
 }
+
+// char	*ft_strdup(const char *s)
+// {
+// 	size_t	len;
+// 	char	*copy;
+
+// 	if (!s)
+// 		return (NULL);
+// 	len = ft_strlen(s);
+// 	copy = malloc(len + 1);
+// 	if (!copy)
+// 		return (NULL);
+// 	for (size_t i = 0; i < len; i++)
+// 		copy[i] = s[i];
+// 	copy[len] = '\0';
+// 	return (copy);
+// }
 
 char *ft_strdup(const char *s)
 {
@@ -89,5 +107,6 @@ char	*ft_trim_string(char **string, int i, int j, int aux)
 		return (NULL);
 	free(*string);
 	*string = clean_content;
+	free(clean_content);
 	return (trimmed);
 }
