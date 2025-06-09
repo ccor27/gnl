@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: crosorio < crosorio@student.42madrid.com>  #+#  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025-06-07 13:17:42 by crosorio          #+#    #+#             */
+/*   Updated: 2025-06-07 13:17:42 by crosorio         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 void	*free_two(char **ptr1, char **ptr2)
@@ -33,25 +45,28 @@ char	*ft_get_line(char *stash)
 	return (line);
 }
 
-char	*ft_update_stash(char **stash)
+void	ft_update_stash(char **stash)
 {
 	int		i;
 	char	*new_stash;
 
-	if (!stash || !*stash)
-		return (NULL);
-	i = 0;
-	while ((*stash)[i] && (*stash)[i] != '\n')
-		i++;
-	if (!((*stash)[i]))
+	if (stash || *stash)
 	{
-		free(*stash);
-		return (NULL);
+		i = 0;
+		while ((*stash)[i] && (*stash)[i] != '\n')
+			i++;
+		if (!((*stash)[i]))
+		{
+			free(*stash);
+			*stash = NULL;
+		}
+		else
+		{
+			new_stash = ft_strdup(*stash + i + 1);
+			free(*stash);
+			*stash = new_stash;
+		}
 	}
-	new_stash = ft_strdup(*stash + i + 1);
-	free(*stash);
-	*stash = NULL;
-	return (new_stash);
 }
 
 int	ft_read(int fd, char **stash, char **buffer)
@@ -86,17 +101,21 @@ char	*get_next_line(int fd)
 
 	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
-		return (free_two(&stash,&buffer));// possible error
+		return (free_two(&stash, &buffer));
 	if (fd < 0 || read(fd, 0, 0) < 0 || BUFFER_SIZE <= 0)
-		return (free_two(&stash,&buffer));
+		return (free_two(&stash, &buffer));
 	if (!ft_read(fd, &stash, &buffer))
-		return (free_two(&stash,&buffer));
+		return (free_two(&stash, &buffer));
 	if (!stash)
-		return (free_two(&stash,&buffer));
+		return (free_two(&stash, &buffer));
 	line = ft_get_line(stash);
-	if (!line)
-		return (free_two(&stash,&buffer));
-	stash = ft_update_stash(&stash);
+	ft_update_stash(&stash);
+	if (!line || line[0] == '\0')
+	{
+		free(line);
+		free_two(&stash, &buffer);
+		return (NULL);
+	}
 	free(buffer);
 	return (line);
 }
