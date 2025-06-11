@@ -50,22 +50,21 @@ void	ft_update_stash(char **stash)
 	int		i;
 	char	*new_stash;
 
-	if (stash || *stash)
+	if (!stash || !*stash)
+		return ;
+	i = 0;
+	while ((*stash)[i] && (*stash)[i] != '\n')
+		i++;
+	if (!((*stash)[i]))
 	{
-		i = 0;
-		while ((*stash)[i] && (*stash)[i] != '\n')
-			i++;
-		if (!((*stash)[i]))
-		{
-			free(*stash);
-			*stash = NULL;
-		}
-		else
-		{
-			new_stash = ft_strdup(*stash + i + 1);
-			free(*stash);
-			*stash = new_stash;
-		}
+		free(*stash);
+		*stash = NULL;
+	}
+	else
+	{
+		new_stash = ft_strdup(*stash + i + 1);
+		free(*stash);
+		*stash = new_stash;
 	}
 }
 
@@ -80,12 +79,16 @@ int	ft_read(int fd, char **stash, char **buffer)
 		if (bytes_read == 0)
 			break ;
 		else if (bytes_read == -1)
+		{
+			free(*stash);
+			*stash = NULL;
 			return (0);
+		}
 		(*buffer)[bytes_read] = '\0';
 		tmp = ft_strjoin(*stash, *buffer, 0, 0);
+		free(*stash);
 		if (!tmp)
 			return (0);
-		free(*stash);
 		*stash = tmp;
 		if (ft_strchr(*buffer, '\n'))
 			break ;
@@ -100,13 +103,11 @@ char	*get_next_line(int fd)
 	char		*buffer;
 
 	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (fd < 0 || fd >= MAX_FD || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+		return (free_two(&stash[fd], &buffer));
 	if (!buffer)
 		return (free_two(&stash[fd], &buffer));
-	if (fd < 0 || fd >= MAX_FD || read(fd, 0, 0) < 0 || BUFFER_SIZE <= 0)
-		return (free_two(&stash[fd], &buffer));
-	if (!ft_read(fd, &stash[fd], &buffer))
-		return (free_two(&stash[fd], &buffer));
-	if (!stash[fd])
+	if (!ft_read(fd, &stash[fd], &buffer) || !stash[fd])
 		return (free_two(&stash[fd], &buffer));
 	line = ft_get_line(stash[fd]);
 	ft_update_stash(&stash[fd]);
