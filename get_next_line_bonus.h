@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crosorio <crosorio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crosorio < crosorio@student.42madrid.com>  #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/07 13:17:29 by crosorio          #+#    #+#             */
-/*   Updated: 2025/06/09 14:46:15 by crosorio         ###   ########.fr       */
+/*   Created: 2025-06-12 08:03:08 by crosorio          #+#    #+#             */
+/*   Updated: 2025-06-12 08:03:08 by crosorio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-// get_next_line_utils.c
+// get_next_line_utils_bonus.c
 char	*ft_strdup(const char *s);
 size_t	ft_strlen(const char *s);
 char	*ft_strchr(const char *s, int c);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strjoin(char const *s1, char const *s2, size_t i, size_t j);
-// get_next_line.c
+// get_next_line_bonus.c
 char	*ft_get_line(char *stash);
 void	ft_update_stash(char **stash);
 int		ft_read(int fd, char **stash, char **buffer);

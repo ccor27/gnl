@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crosorio <crosorio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crosorio < crosorio@student.42madrid.com>  #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/07 13:17:42 by crosorio          #+#    #+#             */
-/*   Updated: 2025/06/09 14:51:01 by crosorio         ###   ########.fr       */
+/*   Created: 2025-06-12 08:02:43 by crosorio          #+#    #+#             */
+/*   Updated: 2025-06-12 08:02:43 by crosorio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,12 +98,10 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || fd >= MAX_FD || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (read(fd, 0, 0) < 0)
-		return (free_two(&stash[fd], NULL));
 	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return (free_two(&stash[fd], &buffer));
-	if (!ft_read(fd, &stash[fd], &buffer) || !stash[fd])
+	if (!ft_read(fd, &stash[fd], &buffer))
 		return (free_two(&stash[fd], &buffer));
 	line = ft_get_line(stash[fd]);
 	if (!line || line[0] == '\0')

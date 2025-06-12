@@ -15,21 +15,20 @@
 char	*ft_strdup(const char *s)
 {
 	char	*s_copy;
-	size_t	s_size;
 	size_t	i;
 
 	if (!s)
 		return (NULL);
-	s_size = ft_strlen(s);
-	s_copy = malloc(s_size + 1);
+	s_copy = malloc(ft_strlen(s) + 1);
 	if (!s_copy)
 		return (NULL);
 	i = 0;
-	while (i <= s_size)
+	while (s[i])
 	{
 		s_copy[i] = s[i];
 		i++;
 	}
+	s_copy[i] = '\0';
 	return (s_copy);
 }
 
@@ -45,19 +44,16 @@ size_t	ft_strlen(const char *s)
 
 char	*ft_strchr(const char *s, int c)
 {
-	int	i;
-	int	s_lenght;
-
-	i = 0;
-	s_lenght = ft_strlen(s);
-	while (i < s_lenght)
+	if (!s)
+		return (NULL);
+	while (*s)
 	{
-		if (s[i] == (unsigned char)c)
-			return ((char *)&s[i]);
-		i++;
+		if (*s == (char)c)
+			return ((char *)s);
+		s++;
 	}
-	if ((unsigned char)c == '\0')
-		return ((char *)&s[i]);
+	if (c == '\0')
+		return ((char *)s);
 	return (0);
 }
 
