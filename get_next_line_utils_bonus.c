@@ -12,6 +12,9 @@
 
 #include "get_next_line_bonus.h"
 
+/**
+ * libft function to  make a copy of a string
+ */
 char	*ft_strdup(const char *s)
 {
 	char	*s_copy;
@@ -32,6 +35,9 @@ char	*ft_strdup(const char *s)
 	return (s_copy);
 }
 
+/**
+ * libft function to know the size of a string
+ */
 size_t	ft_strlen(const char *s)
 {
 	size_t	lenght;
@@ -42,6 +48,11 @@ size_t	ft_strlen(const char *s)
 	return (lenght);
 }
 
+/**
+* libft function to get the pointer of the first character appearance,
+* if it exists in the string.
+* In this case we use this function to know if the character exist int the string
+*/
 char	*ft_strchr(const char *s, int c)
 {
 	if (!s)
@@ -57,6 +68,9 @@ char	*ft_strchr(const char *s, int c)
 	return (0);
 }
 
+/**
+ * libft function to get a substring from an string
+ */
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	size_t	s_lenght;
@@ -82,6 +96,9 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return (sub);
 }
 
+/**
+ * libft function to append two string into a new one
+ */
 char	*ft_strjoin(char const *s1, char const *s2, size_t i, size_t j)
 {
 	size_t	len1;

@@ -12,6 +12,9 @@
 
 #include "get_next_line.h"
 
+/**
+ * Function to free 2 pointers and return NULL
+ */
 void	*free_two(char **ptr1, char **ptr2)
 {
 	if (ptr1 && *ptr1)
@@ -27,6 +30,10 @@ void	*free_two(char **ptr1, char **ptr2)
 	return (NULL);
 }
 
+/**
+ * Function to get a line after in the statsh is a \n or we
+ * reached the end of the file
+ */
 char	*ft_get_line(char *stash)
 {
 	char	*line;
@@ -45,6 +52,10 @@ char	*ft_get_line(char *stash)
 	return (line);
 }
 
+/**
+ * Function to update the stash after get the line, so basically
+ * here we keep the remaining
+ */
 void	ft_update_stash(char **stash)
 {
 	int		i;
@@ -68,6 +79,10 @@ void	ft_update_stash(char **stash)
 	}
 }
 
+/**
+ * Function to read from the file, using a buffer's amount until reached file's end
+ * or a \n
+ */
 int	ft_read(int fd, char **stash, char **buffer)
 {
 	int		bytes_read;
@@ -90,6 +105,7 @@ int	ft_read(int fd, char **stash, char **buffer)
 	return (1);
 }
 
+//Function that is called from the main
 char	*get_next_line(int fd)
 {
 	static char	*stash;

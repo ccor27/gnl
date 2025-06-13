@@ -12,6 +12,9 @@
 
 #include "get_next_line_bonus.h"
 
+/**
+ * Function to free 2 pointers and return NULL
+ */
 void	*free_two(char **ptr1, char **ptr2)
 {
 	if (ptr1 && *ptr1)
@@ -27,6 +30,10 @@ void	*free_two(char **ptr1, char **ptr2)
 	return (NULL);
 }
 
+/**
+ * Function to get a line after in the statsh is a \n or we
+ * reached the end of the file
+ */
 char	*ft_get_line(char *stash)
 {
 	char	*line;
@@ -45,6 +52,10 @@ char	*ft_get_line(char *stash)
 	return (line);
 }
 
+/**
+ * Function to update the stash after get the line, so basically
+ * here we keep the remaining
+ */
 void	ft_update_stash(char **stash)
 {
 	int		i;
@@ -68,6 +79,11 @@ void	ft_update_stash(char **stash)
 	}
 }
 
+/**
+ * Function to read from the file,
+ * using a buffer's amount until reached file's end
+ * or a \n
+ */
 int	ft_read(int fd, char **stash, char **buffer)
 {
 	int		bytes_read;
@@ -89,7 +105,7 @@ int	ft_read(int fd, char **stash, char **buffer)
 	}
 	return (1);
 }
-
+// Function that is called from the bonus main
 char	*get_next_line(int fd)
 {
 	static char	*stash[MAX_FD];
@@ -105,7 +121,7 @@ char	*get_next_line(int fd)
 		return (free_two(&stash[fd], &buffer));
 	line = ft_get_line(stash[fd]);
 	if (!line || line[0] == '\0')
-		return (free(line),free_two(&stash[fd], &buffer));
+		return (free(line), free_two(&stash[fd], &buffer));
 	ft_update_stash(&stash[fd]);
 	free(buffer);
 	return (line);
