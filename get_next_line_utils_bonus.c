@@ -1,15 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crosorio < crosorio@student.42madrid.com>  #+#  +:+       +#+        */
+/*   By: crosorio <crosorio@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-06-07 13:17:36 by crosorio          #+#    #+#             */
-/*   Updated: 2025-06-07 13:17:36 by crosorio         ###   ########.fr       */
+/*   Created: 2025/06/09 13:31:58 by crosorio          #+#    #+#             */
+/*   Updated: 2025/06/09 14:45:56 by crosorio         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 /**
  * libft function to  make a copy of a string
@@ -94,6 +95,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	sub[i] = '\0';
 	return (sub);
 }
+
 /**
  * libft function to append two string into a new one
  */

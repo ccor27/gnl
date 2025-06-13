@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: crosorio <crosorio@student.42.fr>          +#+  +:+       +#+        */
+/*   By: crosorio < crosorio@student.42madrid.com>  #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/07 13:17:42 by crosorio          #+#    #+#             */
-/*   Updated: 2025/06/09 14:26:42 by crosorio         ###   ########.fr       */
+/*   Created: 2025-06-12 08:02:43 by crosorio          #+#    #+#             */
+/*   Updated: 2025-06-12 08:02:43 by crosorio         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 /**
  * Function to free 2 pointers and return NULL
@@ -80,7 +80,8 @@ void	ft_update_stash(char **stash)
 }
 
 /**
- * Function to read from the file, using a buffer's amount until reached file's end
+ * Function to read from the file,
+ * using a buffer's amount until reached file's end
  * or a \n
  */
 int	ft_read(int fd, char **stash, char **buffer)
@@ -104,25 +105,24 @@ int	ft_read(int fd, char **stash, char **buffer)
 	}
 	return (1);
 }
-
-//Function that is called from the main
+// Function that is called from the bonus main
 char	*get_next_line(int fd)
 {
-	static char	*stash;
+	static char	*stash[MAX_FD];
 	char		*line;
 	char		*buffer;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || fd >= MAX_FD || BUFFER_SIZE <= 0)
 		return (NULL);
 	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
-		return (free_two(&stash, &buffer));
-	if (!ft_read(fd, &stash, &buffer))
-		return (free_two(&stash, &buffer));
-	line = ft_get_line(stash);
+		return (free_two(&stash[fd], &buffer));
+	if (!ft_read(fd, &stash[fd], &buffer))
+		return (free_two(&stash[fd], &buffer));
+	line = ft_get_line(stash[fd]);
 	if (!line || line[0] == '\0')
-		return (free(line), free_two(&stash, &buffer));
-	ft_update_stash(&stash);
+		return (free(line), free_two(&stash[fd], &buffer));
+	ft_update_stash(&stash[fd]);
 	free(buffer);
 	return (line);
 }
