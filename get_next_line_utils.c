@@ -7,7 +7,6 @@
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025-06-07 13:17:36 by crosorio          #+#    #+#             */
 /*   Updated: 2025-06-07 13:17:36 by crosorio         ###   ########.fr       */
-/*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
@@ -95,7 +94,6 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	sub[i] = '\0';
 	return (sub);
 }
-
 /**
  * libft function to append two string into a new one
  */
